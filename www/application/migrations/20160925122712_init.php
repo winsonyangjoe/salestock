@@ -5,78 +5,17 @@ class Migration_Init extends CI_Migration {
     public function up()
     {
         $queries = [
-            'CREATE TABLE `agent` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `phone` varchar(255) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `lat` double NOT NULL,
-  `lon` double NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `agent_name_index` (`name`) USING BTREE,
-  KEY `agent_phone_index` (`phone`) USING BTREE,
-  KEY `agent_address_index` (`address`) USING BTREE,
-  KEY `agent_lat_index` (`lat`) USING BTREE,
-  KEY `agent_lon_index` (`lon`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `agent_agent_type` (
-  `agent_id` int(10) unsigned NOT NULL,
-  `agent_type_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`agent_id`,`agent_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `agent_bank` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `agent_id` int(10) unsigned NOT NULL,
-  `bank_name` varchar(255) NOT NULL,
-  `account_name` varchar(255) NOT NULL,
-  `account_number` varchar(255) NOT NULL,
-  `bank_address` varchar(255) DEFAULT NULL,
+            'CREATE TABLE `ci_sessions` (
+  `id` varchar(255) NOT NULL,
+  `ip_address` varchar(255) DEFAULT NULL,
+  `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `data` varchar(255) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
+  `last_activity` int(255) DEFAULT NULL,
+  `session_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `agent_person` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `agent_id` int(11) unsigned NOT NULL,
-  `code` varchar(255) NOT NULL,
-  `phone` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `identification` enum(\'KTP\',\'SIM\',\'PASSPORT\') DEFAULT NULL,
-  `identification_id` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `agent_person_agent_id_index` (`agent_id`) USING BTREE,
-  KEY `agent_person_code_index` (`code`) USING BTREE,
-  KEY `agent_person_phone_index` (`phone`) USING BTREE,
-  KEY `agent_person_identification_index` (`identification`) USING BTREE,
-  KEY `agent_person_identification_id_index` (`identification_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `agent_picture` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `agent_id` int(10) unsigned NOT NULL,
-  `filename` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `agent_picture_agent_id_index` (`agent_id`) USING BTREE,
-  KEY `agent_picture_filename_index` (`filename`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `agent_tag` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `tag` varchar(255) NOT NULL,
-  `agent_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `agent_tag_tag_index` (`tag`) USING BTREE,
-  KEY `agent_tag_agent_id_index` (`agent_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `agent_type` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `agent_type_name_index` (`name`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `area` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`,`name`),
-  KEY `area_name_index` (`name`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `log` (
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;',
+'CREATE TABLE `log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `action` varchar(255) NOT NULL,
@@ -101,13 +40,40 @@ class Migration_Init extends CI_Migration {
   KEY `log_key_3_index` (`key_3`),
   KEY `log_value_3_index` (`value_3`),
   KEY `log_time_index` (`time`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8;',
+'CREATE TABLE `migrations` (
+  `version` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `role` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+'CREATE TABLE `order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `total` int(11) DEFAULT NULL,
+  `discount` int(11) DEFAULT NULL,
+  `status` varchar(255) DEFAULT 'pending',
+  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `shipping_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `sales` (
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;',
+'CREATE TABLE `order_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `price` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;',
+'CREATE TABLE `product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `sku` varchar(255) DEFAULT NULL,
+  `meta` varchar(255) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  `description` text,
+  `image` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;',
+'CREATE TABLE `sales` (
   `user_id` int(11) NOT NULL,
   `phone` varchar(255) NOT NULL,
   `code` varchar(255) NOT NULL,
@@ -117,20 +83,7 @@ class Migration_Init extends CI_Migration {
   KEY `sales_phone_index` (`phone`) USING BTREE,
   KEY `sales_code_index` (`code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `sales_area` (
-  `user_id` int(10) unsigned NOT NULL,
-  `area_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`user_id`,`area_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `sales_tag` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `tag` varchar(255) NOT NULL,
-  `user_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `sales_tag_tag_index` (`tag`) USING BTREE,
-  KEY `sales_tag_user_id_index` (`user_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `user` (
+'CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -140,12 +93,37 @@ class Migration_Init extends CI_Migration {
   UNIQUE KEY `user_email_unique` (`email`),
   KEY `user_name_index` (`name`) USING BTREE,
   KEY `user_is_disabled_index` (`is_disabled`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;',
+'CREATE TABLE `user_login_token` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `ip_address` varchar(255) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
+  `is_disabled` tinyint(3) unsigned DEFAULT NULL,
+  `time` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_login_token_user_id_index` (`user_id`) USING BTREE,
+  KEY `user_login_token_token_index` (`token`) USING HASH,
+  KEY `user_login_token_ip_address_index` (`ip_address`) USING BTREE,
+  KEY `user_login_token_user_agent_index` (`user_agent`) USING BTREE,
+  KEY `user_login_token_is_disabled_index` (`is_disabled`) USING HASH,
+  KEY `user_login_token_time_index` (`time`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
-            'CREATE TABLE `user_role` (
+'CREATE TABLE `user_role` (
   `user_id` int(10) unsigned NOT NULL,
   `role_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`user_id`,`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
+'CREATE TABLE `voucher` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `date_from` date DEFAULT NULL,
+  `date_until` date DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;'
         ];
         $this->db->trans_start();
         foreach ($queries as $query) {

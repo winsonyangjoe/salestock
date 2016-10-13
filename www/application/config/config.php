@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 // $config['base_url'] = isset($_SERVER['SERVER_NAME']) ? ('http://' . $_SERVER['SERVER_NAME'] . '/') : (isset($_SERVER['HTTP_HOST']) ? ('http://' . $_SERVER['HTTP_HOST'] . '/') : '');
-$config['base_url'] = "http://jayausaha-sales.dev/";
+$config['base_url'] = "http://salestock.dev/";
 
 /*
 |--------------------------------------------------------------------------
